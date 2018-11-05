@@ -1,3 +1,3 @@
 # Aphrodite
 
-A Boyfriend Remote for girls who are needy af
+A Boyfriend Remote App for girls who are needy af
