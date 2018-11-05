@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">BFR</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="attentionMsgList">Give attention plz :D</string>
+
+    <string-array name="attentionMsgList">
+        <item>give attention plz</item>
+        <item>Come heree</item>
+    </string-array>
+    <string-array name="foodMsgList">
+    <item>FEED ME</item>
+    <item>me hungry</item>
+</string-array>
+</resources>
