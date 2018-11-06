@@ -2,25 +2,25 @@ package kenmurrell.bfr;
 
 import android.Manifest;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.telephony.SmsManager;
-import android.text.InputType;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.SmsManager;
+import android.text.InputType;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import java.util.Arrays;
@@ -30,51 +30,6 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String BF_NUM = "6138858659";
-
-    public static Boolean sendMessage(String msg, String number){
-
-        if(isPhoneNumber(number)){
-            SmsManager sms = SmsManager.getDefault();
-            sms.sendTextMessage(number, null, msg, null, null );
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_number) {
-            onNavNumber();
-        } else if (id == R.id.nav_settings) {
-
-        } else if (id == R.id.nav_share) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    public static Boolean isPhoneNumber(String number){
-        return true;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +101,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+
+    public static Boolean sendMessage(String msg, String number){
+        if(PhoneNumberUtils.isGlobalPhoneNumber(number)){
+            SmsManager sms = SmsManager.getDefault();
+            sms.sendTextMessage(number, null, msg, null, null );
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_number) {
+            onNavNumber();
+        } else if (id == R.id.nav_settings) {
+
+        } else if (id == R.id.nav_share) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 
     public boolean onNavNumber(){
         final SharedPreferences settings = getSharedPreferences("PHONE_NUMBER", 0);
