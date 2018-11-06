@@ -31,6 +31,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private final String BF_NUM = "6138858659";
 
+    public static Boolean sendMessage(String msg, String number){
+
+        if(isPhoneNumber(number)){
+            SmsManager sms = SmsManager.getDefault();
+            sms.sendTextMessage(number, null, msg, null, null );
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_number) {
+            onNavNumber();
+        } else if (id == R.id.nav_settings) {
+
+        } else if (id == R.id.nav_share) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public static Boolean isPhoneNumber(String number){
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +117,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 int idx = new Random().nextInt(attentionMsgList.size());
-                sendMessage(attentionMsgList.get(idx));
-                Snackbar.make(view, "Sent!", Snackbar.LENGTH_LONG)
+                //sendMessage(attentionMsgList.get(idx));
+                String number = getSharedPreferences("PHONE_NUMBER", 0).getString("NUM", "0");
+                String confirmSent = sendMessage("Give attention pls", number) ? "Sent" : "Not Sent";
+                Snackbar.make(view, confirmSent, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -81,8 +128,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 int idx = new Random().nextInt(foodMsgList.size());
-                sendMessage(foodMsgList.get(idx));
-                Snackbar.make(view, "Sent!", Snackbar.LENGTH_LONG)
+                //sendMessage(foodMsgList.get(idx));
+                String number = getSharedPreferences("PHONE_NUMBER", 0).getString("NUM", "0");
+                String confirmSent = sendMessage("FEED ME", number) ? "Sent" : "Not Sent";
+                Snackbar.make(view, confirmSent, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -98,74 +147,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-// ---OPTIONS MENU--- probably getting rid of this...this too ^^^
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_number) {
-            onNavNumber();
-        } else if (id == R.id.nav_settings) {
-
-        } else if (id == R.id.nav_share) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    public void sendMessage(String msg){
-        SharedPreferences settings = getSharedPreferences("PHONE_NUMBER", 0);
-        String number = settings.getString("NUM", "0");
-        SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(number, null, msg, null, null );
-    }
-
-
     public boolean onNavNumber(){
         final SharedPreferences settings = getSharedPreferences("PHONE_NUMBER", 0);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Please add a phone number");
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_PHONE);
+        input.setText(settings.getString("NUM", "None"));
         builder.setView(input);
-        builder.setMessage("Current: " + settings.getString("NUM", "None"));
 
-        // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
