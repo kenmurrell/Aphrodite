@@ -31,24 +31,14 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static Boolean sendMessage(String msg, String number){
-        if(PhoneNumberUtils.isGlobalPhoneNumber(number)){
+
+    public static Boolean sendMessage(String msg, String number) {
+        if (PhoneNumberUtils.isGlobalPhoneNumber(number)) {
             SmsManager sms = SmsManager.getDefault();
-            sms.sendTextMessage(number, null, msg, null, null );
+            sms.sendTextMessage(number, null, msg, null, null);
             return true;
-        }else{
-            return false;
-        }
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            return false;
         }
     }
 
@@ -100,26 +90,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         attentionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //If RANDOM_MSG is on, use a random message from the message list. If it's off, use the default (first entry of the list)
-                int idx = getSharedPreferences("SETTINGS", 0).getBoolean("RANDOM_MSG",false) ? new Random().nextInt(attentionMsgList.size()): 0;
-                String number = getSharedPreferences("SETTINGS", 0).getString("PHONE_NUMBER", "0");
-                String confirmSent = sendMessage(attentionMsgList.get(idx), number) ? "Sent" : "Not Sent";
-                Snackbar.make(view, confirmSent, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                onAttentionButton(view, attentionMsgList);
             }
         });
         FloatingActionButton foodButton = (FloatingActionButton) findViewById(R.id.foodButton) ;
         foodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int idx = getSharedPreferences("SETTINGS", 0).getBoolean("RANDOM_MSG",false) ? new Random().nextInt(foodMsgList.size()): 0;
-                String number = getSharedPreferences("SETTINGS", 0).getString("PHONE_NUMBER", "0");
-                String confirmSent = sendMessage(foodMsgList.get(idx), number) ? "Sent" : "Not Sent";
-                Snackbar.make(view, confirmSent, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                onFoodButton(view, foodMsgList);
             }
         });
-
 
 
         //-----NAVIGATION-----
@@ -130,6 +110,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }//END
+
+    public boolean onAttentionButton(View view, List<String> attentionMsgList){
+        //If RANDOM_MSG is on, use a random message from the message list. If it's off, use the default (first entry of the list)
+        int idx = getSharedPreferences("SETTINGS", 0).getBoolean("RANDOM_MSG",false) ? new Random().nextInt(attentionMsgList.size()): 0;
+        String number = getSharedPreferences("SETTINGS", 0).getString("PHONE_NUMBER", "0");
+        String confirmSent = sendMessage(attentionMsgList.get(idx), number) ? "Sent" : "Not Sent";
+        Snackbar.make(view, confirmSent, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+        return true;
+    }
+
+    public boolean onFoodButton(View view, List<String> foodMsgList){
+        int idx = getSharedPreferences("SETTINGS", 0).getBoolean("RANDOM_MSG",false) ? new Random().nextInt(foodMsgList.size()): 0;
+        String number = getSharedPreferences("SETTINGS", 0).getString("PHONE_NUMBER", "0");
+        String confirmSent = sendMessage(foodMsgList.get(idx), number) ? "Sent" : "Not Sent";
+        Snackbar.make(view, confirmSent, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
