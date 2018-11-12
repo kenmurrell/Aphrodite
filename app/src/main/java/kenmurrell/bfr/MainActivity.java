@@ -2,6 +2,7 @@ package kenmurrell.bfr;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,26 +16,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 import android.text.InputType;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    private final String BF_NUM = "6138858659";
 
     public static Boolean sendMessage(String msg, String number){
         if(PhoneNumberUtils.isGlobalPhoneNumber(number)){
@@ -49,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -105,10 +100,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         attentionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int idx = new Random().nextInt(attentionMsgList.size());
-                //sendMessage(attentionMsgList.get(idx));
+                //If RANDOM_MSG is on, use a random message from the message list. If it's off, use the default (first entry of the list)
+                int idx = getSharedPreferences("SETTINGS", 0).getBoolean("RANDOM_MSG",false) ? new Random().nextInt(attentionMsgList.size()): 0;
                 String number = getSharedPreferences("SETTINGS", 0).getString("PHONE_NUMBER", "0");
-                String confirmSent = sendMessage("Give attention pls", number) ? "Sent" : "Not Sent";
+                String confirmSent = sendMessage(attentionMsgList.get(idx), number) ? "Sent" : "Not Sent";
                 Snackbar.make(view, confirmSent, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -117,43 +112,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         foodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int idx = new Random().nextInt(foodMsgList.size());
-                //sendMessage(foodMsgList.get(idx));
+                int idx = getSharedPreferences("SETTINGS", 0).getBoolean("RANDOM_MSG",false) ? new Random().nextInt(foodMsgList.size()): 0;
                 String number = getSharedPreferences("SETTINGS", 0).getString("PHONE_NUMBER", "0");
-                String confirmSent = sendMessage("FEED ME", number) ? "Sent" : "Not Sent";
+                String confirmSent = sendMessage(foodMsgList.get(idx), number) ? "Sent" : "Not Sent";
                 Snackbar.make(view, confirmSent, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
 
-        //------------------------
-        //Error is here! onCheckedChange is not being called
-        //Look at this: https://stackoverflow.com/questions/36868099/make-switch-button-which-is-in-an-alertdialog-do-something-when-its-state-cha/36868526#36868526
-        //------------------------
-        LayoutInflater factory = getLayoutInflater();
-        View optionsView = factory.inflate(R.layout.options_menu, null);
-        SwitchCompat randomSwitch = optionsView.findViewById(R.id.switchRandom);
-        randomSwitch.setChecked(getSharedPreferences("SETTINGS", 0).getBoolean("RANDOM_MSG", false));
-        randomSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences.Editor editor = getSharedPreferences("SETTINGS",0).edit();
-                editor.putBoolean("RANDOM_MSG", isChecked);
-                Log.i("--EVENT--","Changed RANDOM_MSG");
-                editor.apply();
-            }
-        });
-        SwitchCompat dataSwitch = optionsView.findViewById(R.id.switchData);
-        dataSwitch.setChecked(getSharedPreferences("SETTINGS", 0).getBoolean("SEND_DATA", true));
-        dataSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences.Editor editor = getSharedPreferences("SETTINGS",0).edit();
-                editor.putBoolean("USER_DATA", isChecked);
-                Log.i("--EVENT--","Changed USER_DATA");
-                editor.apply();
-            }
-        });
 
 
         //-----NAVIGATION-----
@@ -218,29 +184,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public boolean onNavSettings(){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setCustomTitle(getLayoutInflater().inflate(R.layout.options_menu,null));
-        builder.setNeutralButton("Done", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
         return true;
     }
 
     public boolean onNavAbout(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("About the Developer");
-        builder.setMessage("add some stuff here about me later idk");
-        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
         return true;
     }
 

@@ -27,22 +27,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="200dp"
+        android:layout_marginBottom="200dp"
         android:scaleType="center"
         android:scaleX="3"
         android:scaleY="3"
-        app:srcCompat="@drawable/ic_button_pizza" />
+        app:srcCompat="@drawable/ic_button_heart" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/foodButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="200dp"
+        android:layout_marginTop="200dp"
         android:scaleType="center"
         android:scaleX="3"
         android:scaleY="3"
-        app:srcCompat="@drawable/ic_button_heart" />
+        app:srcCompat="@drawable/ic_button_pizza" />
 
 
 
