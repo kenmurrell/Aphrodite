@@ -9,10 +9,22 @@
 
     <string-array name="attentionMsgList">
         <item>give attention plz</item>
-        <item>Come heree</item>
+        <item>give attention please :)</item>
+        <item>come heree</item>
+        <item>attention required</item>
+        <item>i need attention!!</item>
+        <item>ATTENTION EMERGENCY</item>
     </string-array>
     <string-array name="foodMsgList">
         <item>FEED ME</item>
         <item>me hungry</item>
+        <item>give food please</item>
+        <item>GIRLFRIEND REQUIRES SUSTENANCE</item>
+        <item>need food :3</item>
     </string-array>
+
+
+    <!--ABOUT MENU VARIABLES-->
+    <string name="about_title">\nBoyfriend Remote \n</string>
+    <string name="about_body">An app for you to get attention and food from your significant other. Press the attention button (heart button) to request attention, and the food button (pizza button) to request food.</string>
 </resources>
