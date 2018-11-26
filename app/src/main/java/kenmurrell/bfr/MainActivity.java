@@ -116,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //If RANDOM_MSG is on, use a random message from the message list. If it's off, use the default (first entry of the list)
         int idx = getSharedPreferences("SETTINGS", 0).getBoolean("RANDOM_MSG",false) ? new Random().nextInt(attentionMsgList.size()): 0;
         String number = getSharedPreferences("SETTINGS", 0).getString("PHONE_NUMBER", "0");
-        String confirmSent = sendMessage(attentionMsgList.get(idx), number) ? "Sent" : "Not Sent";
+        String msg = attentionMsgList.get(idx);
+        String confirmSent = sendMessage(msg, number) ? ("Sent: "+ msg): "Not Sent";
         Snackbar.make(view, confirmSent, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
         return true;
@@ -125,7 +126,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onFoodButton(View view, List<String> foodMsgList){
         int idx = getSharedPreferences("SETTINGS", 0).getBoolean("RANDOM_MSG",false) ? new Random().nextInt(foodMsgList.size()): 0;
         String number = getSharedPreferences("SETTINGS", 0).getString("PHONE_NUMBER", "0");
-        String confirmSent = sendMessage(foodMsgList.get(idx), number) ? "Sent" : "Not Sent";
+        String msg = foodMsgList.get(idx);
+        String confirmSent = sendMessage(msg, number) ? ("Sent: "+msg) : "Not Sent";
         Snackbar.make(view, confirmSent, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
         return true;
